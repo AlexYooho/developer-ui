@@ -57,7 +57,6 @@ export default {
         this.$router.push("/home/chat");
         this.$emit("init");
         this.$emit("close");
-        debugger
         this.$message.success("登录成功");
       });
     },
