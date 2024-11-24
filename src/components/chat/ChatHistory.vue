@@ -70,11 +70,10 @@ export default{
 					page:this.page++,
 					size:this.size
 				}
-				
 				if(this.chat.type=='GROUP'){
-					param.groupId = this.group.id;
+					param.targetId = this.group.id;
 				}else{
-					param.friendId = this.friend.id;
+					param.targetId = this.friend.id;
 				}
 
 				this.loading = true;
