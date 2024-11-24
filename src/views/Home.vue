@@ -242,15 +242,16 @@ export default {
           return;
         }
         msgInfos.forEach((msgInfo) => {
-          msgInfo.selfSend =
-            msgInfo.sendId == this.$store.state.userStore.userInfo.id;
+          msgInfo.selfSend = msgInfo.sendId == this.$store.state.userStore.userInfo.id;
           let groupId = msgInfo.groupId;
+          if(this.$store.state.groupStore.groups!=null) {
           let group = this.$store.state.groupStore.groups.find(
             (g) => g.id == groupId
           );
           if (group) {
             this.insertGroupMessage(group, msgInfo);
           }
+        }
         });
 
         if (msgInfos.length == 100) {

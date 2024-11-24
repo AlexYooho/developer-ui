@@ -3,7 +3,7 @@ import router from "@/router";
 import { Message } from 'element-ui';
 
 const http = axios.create({
-    baseURL: "http://localhost:9000",
+    baseURL: "http://localhost:9009",
     timeout: 30000,
     withCredentials: true,
     headers: {
@@ -45,7 +45,7 @@ http.interceptors.response.use(async response => {
             router.replace("/home")
         })
 
-        sessionStorage.setItem("token",data.token);
+        sessionStorage.setItem("token",data.accessToken);
         sessionStorage.setItem("refreshToken",data.refreshToken);
         response.config.headers=undefined;
         return http(response.config);

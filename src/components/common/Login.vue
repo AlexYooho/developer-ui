@@ -53,11 +53,10 @@ export default {
       };
       
       this.$api.login(dto).then((res) => {
-        sessionStorage.setItem("accessToken", res.access_token);
+        sessionStorage.setItem("accessToken", res.accessToken);
         this.$router.push("/home/chat");
         this.$emit("init");
         this.$emit("close");
-        debugger
         this.$message.success("登录成功");
       });
     },

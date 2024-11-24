@@ -384,7 +384,7 @@ export default {
 				return;
 			}
 			this.chat.unreadCount = 0;
-			this.$api.readedMessage(this.chat.type,this.chat.targetId).then(() => {
+			this.$api.readedMessage(this.chat.type.toLowerCase(),this.chat.targetId).then(() => {
 				this.$store.commit("resetUnreadCount", this.chat);
 			});
 		},
@@ -610,7 +610,7 @@ export default {
 		},
 		// 加载好友
 		loadFriend(friendId) {
-			this.$api.findUserInfo(groupId).then((friend) => {
+			this.$api.findUserInfo(friendId).then((friend) => {
 				this.friend = friend;
 				this.$store.commit("updateChatFromFriend", friend);
 				this.$store.commit("updateFriend", friend);
