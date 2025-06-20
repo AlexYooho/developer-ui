@@ -4,12 +4,18 @@ const messageApi = {
     // message相关
     // 获取私聊消息列表
     getPrivateMessageList(miniId){
-        return http.GET(`/message-module/api/message/0/loadMessage?minId=${miniId}`);
+        let data = {
+            min_id : miniId
+        };
+        return http.GET(`/message-module/api/message/PRIVATE_MESSAGE/loadMessage/${miniId}`);
     },
 
     // 获取群聊消息列表
     getGroupMessageList(miniId){
-        return http.GET(`/message-module/api/message/1/loadMessage?minId=${miniId}`);
+        let data = {
+            min_id : miniId
+        };
+        return http.GET(`/message-module/api/message/GROUP_MESSAGE/loadMessage/${miniId}`);
     },
 
     // 获取历史消息
@@ -20,6 +26,7 @@ const messageApi = {
 
     // 发送消息
     sendMessage(chatType,param){
+        debugger
         let type = chatType == "private" ? 0 : 1;
         return http.POST(`/message-module/api/message/${type}/send`,param);
     },

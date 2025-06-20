@@ -14,7 +14,10 @@ const userApi = {
 
     // 获取用户信息
     findUserInfo(userId){
-        return http.GET(`/user-module/api/user/find/${userId}`);
+        let data = {
+            user_id : userId
+        };
+        return http.POST(`/user-module/api/user/find`,data);
     },
 
     // 注册
@@ -34,7 +37,7 @@ const userApi = {
 
     // 在线终端
     getOnlineTerminal(ids){
-        return http.GET(`/user-module/api/user/online/terminal?userIds=${ids}`);
+        return http.GET(`/user-module/api/user/online/terminal?user_ids=${ids}`);
     }
 };
 

@@ -33,7 +33,7 @@
           <el-menu-item title="设置" @click="showSetting()">
             <span class="el-icon-setting"></span>
           </el-menu-item>
-          <el-menu-item title="开关软件" @click="showLogin()">
+          <el-menu-item title="退出登录" @click="showLogin()">
             <span class="el-icon-switch-button"></span>
           </el-menu-item>
         </el-menu>
