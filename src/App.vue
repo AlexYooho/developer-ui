@@ -1,5 +1,5 @@
 <template>
-  <div id="app" style="background-image: url(http://42.193.251.7:8003/developer/image/20240107/1704635261124.jpg);background-size: cover;">
+  <div id="app" style="background-image: url();background-size: cover;">
     <router-view />
   </div>
 </template>

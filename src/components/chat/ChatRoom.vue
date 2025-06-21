@@ -24,8 +24,7 @@
 						</el-main>
 						<el-footer height="38.5%" class="im-chat-footer">
 							<div class="chat-tool-bar">
-								<div title="表情" class="icon iconfont icon-biaoqing" ref="emotion"
-									@click.stop="showEmotionBox()"></div>
+								<div title="表情" class="icon iconfont icon-biaoqing" ref="emotion" @click.stop="showEmotionBox()"></div>
 								<div title="发送图片">
 									<file-upload :action="imageAction" :maxSize="5 * 1024 * 1024" :fileTypes="[
 										'image/jpeg',
@@ -47,6 +46,7 @@
 								<div title="视频聊天" v-show="chat.type == 'PRIVATE'" class="el-icon-phone-outline"
 									@click="showVideoBox()"></div>
 								<div title="聊天记录" class="el-icon-chat-dot-round" @click="showHistoryBox()"></div>
+								<div title="更多" class="el-icon-more" ref="chatMoreTool" @click.stop="showChatMoreToolox()"></div>
 							</div>
 							<div class="send-content-area">
 								<div contenteditable="true" v-show="!sendImageUrl" ref="editBox" class="send-text-area"
@@ -82,10 +82,10 @@
 				</el-container>
 			</el-main>
 			<emotion ref="emoBox" @emotion="onEmotion"></emotion>
+			<chat-more-tool ref="chatToolBox" @chatMoreTool="onChatMoreTool"></chat-more-tool>
 			<chat-voice :visible="showVoice" @close="closeVoiceBox" @send="onSendVoice"></chat-voice>
-			
-			<chat-at-box ref="atBox" :ownerId="group.ownerId" :members="groupMembers" :search-text="atSearchText"
-				@select="onAtSelect"></chat-at-box>
+			<chat-at-box ref="atBox" :ownerId="group.ownerId" :members="groupMembers" :search-text="atSearchText" @select="onAtSelect"></chat-at-box>
+			<send-red-packets ref="sendRedPackets" :visible="showSendRedPacketsDialog" @close="closeSendRedPackets()"></send-red-packets>
 		</el-container>
 	</div>
 </template>
@@ -98,6 +98,9 @@ import Emotion from "../common/Emotion.vue";
 import ChatVoice from "./ChatVoice.vue";
 import ChatHistory from "./ChatHistory.vue";
 import ChatAtBox from "./ChatAtBox.vue";
+import ChatMoreTool from "./ChatMoreTool.vue";
+import paymentService from "../../service/payment";
+import SendRedPackets from "../payment/SendRedPackets.vue";
 
 export default {
 	name: "chatPrivate",
@@ -109,6 +112,8 @@ export default {
 		ChatVoice,
 		ChatHistory,
 		ChatAtBox,
+		ChatMoreTool,
+		SendRedPackets
 	},
 	props: {
 		chat: {
@@ -132,6 +137,7 @@ export default {
 			focusOffset: null, // 缓存光标所在节点位置
 			zhLock: false, // 解决中文输入法触发英文的情况
 			imageIndex: 0, // 图片索引
+			showSendRedPacketsDialog: false, // 是否显示发送红包弹窗
 		};
 	},
 	methods: {
@@ -139,6 +145,7 @@ export default {
 		closeRefBox() {
 			this.$refs.emoBox.close();
 			this.$refs.atBox.close();
+			this.$refs.chatToolBox.close();
 		},
 
 		closeHistotyMessageBox(){
@@ -527,6 +534,7 @@ export default {
 		// 表情
 		// 展示表情弹窗
 		showEmotionBox() {
+			this.$refs.chatToolBox.close();
 			let width = this.$refs.emotion.offsetWidth;
 			let left = this.$elm.fixLeft(this.$refs.emotion);
 			let top = this.$elm.fixTop(this.$refs.emotion);
@@ -551,6 +559,38 @@ export default {
 			range.insertNode(element);
 			// 光标移动到末尾
 			range.collapse();
+		},
+
+		// 更多聊天工具
+		showChatMoreToolox() {
+			this.$refs.emoBox.close();
+			let width = this.$refs.chatMoreTool.offsetWidth;
+			let left = this.$elm.fixLeft(this.$refs.chatMoreTool);
+			let top = this.$elm.fixTop(this.$refs.chatMoreTool);
+			this.$refs.chatToolBox.open({
+				x: left + width / 2,
+				y: top,
+			});
+		},
+		// 执行具体操作
+		onChatMoreTool(action) {
+			if(action == "sendRedPacket"){
+				debugger
+				this.showSendRedPackets();
+				//paymentService.sendRedPackets(action);
+			}else if(action == "transfer"){
+				paymentService.transfer(action);
+			}else{
+				this.$message.success("功能暂未上线");
+			}
+		},
+
+		showSendRedPackets() {
+			this.showSendRedPacketsDialog = true;
+		},
+
+		closeSendRedPackets() {
+			this.showSendRedPacketsDialog = false;
 		},
 
 		// 公共事件
