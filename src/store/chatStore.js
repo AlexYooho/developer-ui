@@ -82,8 +82,10 @@ export default {
 				chat.lastContent = "[图片]";
 			} else if (msgInfo.type == MESSAGE_TYPE.FILE) {
 				chat.lastContent = "[文件]";
-			} else if (msgInfo.type == MESSAGE_TYPE.AUDIO) {
-				chat.lastContent = "[语音]";
+			} else if (msgInfo.type == MESSAGE_TYPE.RED_PACKET) {
+				chat.lastContent = "[红包]";
+			} else if (msgInfo.type == MESSAGE_TYPE.TRANSFER) {
+				chat.lastContent = "[转账]";
 			} else {
 				chat.lastContent = msgInfo.messageContent;
 			}

@@ -4,17 +4,11 @@ const messageApi = {
     // message相关
     // 获取私聊消息列表
     getPrivateMessageList(miniId){
-        let data = {
-            min_id : miniId
-        };
         return http.GET(`/message-module/api/message/PRIVATE_MESSAGE/loadMessage/${miniId}`);
     },
 
     // 获取群聊消息列表
     getGroupMessageList(miniId){
-        let data = {
-            min_id : miniId
-        };
         return http.GET(`/message-module/api/message/GROUP_MESSAGE/loadMessage/${miniId}`);
     },
 

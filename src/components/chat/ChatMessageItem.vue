@@ -26,8 +26,7 @@
           <!-- 图片 -->
           <div class="chat-msg-image" v-if="msgInfo.messageContentType == $enums.MESSAGE_TYPE.IMAGE">
             <div class="img-load-box" v-loading="loading" element-loading-text="上传中" element-loading-background="rgba(0,0,0,0.4)">
-              <el-image style="width: 100px; height: 100px" :src="JSON.parse(msgInfo.messageContent).thumbUrl" :zoom-rate="1.2"
-                :max-scale="7" :min-scale="0.2" :preview-src-list="previewImageList" :initial-index="initialIndex" fit="cover" @click="setInitialIndex(msgInfo.id)" />
+              <el-image style="width: 100px; height: 100px" :src="JSON.parse(msgInfo.messageContent).thumbUrl" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" :preview-src-list="previewImageList" :initial-index="initialIndex" fit="cover" @click="setInitialIndex(msgInfo.id)" />
             </div>
             <span title="发送失败" v-show="loadFail" @click="handleSendFail" class="send-fail el-icon-warning"></span>
           </div>
@@ -45,21 +44,17 @@
             <span title="发送失败" v-show="loadFail" @click="handleSendFail" class="send-fail el-icon-warning"></span>
           </div>
           <!-- 语音 -->
-          <div class="chat-msg-voice" v-if="msgInfo.messageContentType == $enums.MESSAGE_TYPE.AUDIO" @click="handlePlayVoice()">
+          <!-- <div class="chat-msg-voice" v-if="msgInfo.messageContentType == $enums.MESSAGE_TYPE.AUDIO" @click="handlePlayVoice()">
             <audio controls :src="JSON.parse(msgInfo.messageContent).url"></audio>
+          </div> -->
+          <!-- 红包 -->
+          <div class="chat-msg-red-packet" v-if="msgInfo.messageContentType == $enums.MESSAGE_TYPE.RED_PACKET">
+            <span>{{ msgInfo.messageContent }}</span>
           </div>
           <!-- 已读未读状态 -->
-          <span class="chat-readed" v-show="msgInfo.selfSend &&
-            !msgInfo.groupId &&
-            msgInfo.messageStatus == $enums.MESSAGE_STATUS.READED
-            ">已读</span>
-          <span class="chat-unread" v-show="msgInfo.selfSend &&
-            !msgInfo.groupId &&
-            msgInfo.messageStatus != $enums.MESSAGE_STATUS.READED
-            ">未读</span>
-            <span class="chat-unread" v-show="msgInfo.selfSend &&
-            msgInfo.groupId &&
-            msgInfo.unReadCount>0">{{ msgInfo.unReadCount }} 人未读</span>
+          <span class="chat-readed" v-show="msgInfo.selfSend && !msgInfo.groupId && msgInfo.messageStatus == $enums.MESSAGE_STATUS.READED">已读</span>
+          <span class="chat-unread" v-show="msgInfo.selfSend && !msgInfo.groupId && msgInfo.messageStatus != $enums.MESSAGE_STATUS.READED">未读</span>
+          <span class="chat-unread" v-show="msgInfo.selfSend && msgInfo.groupId && msgInfo.unReadCount>0">{{ msgInfo.unReadCount }} 人未读</span>
         </div>
       </div>
     </div>

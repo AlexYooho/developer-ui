@@ -140,7 +140,7 @@ export default {
     loadPrivateMessage(minId) {
       this.$store.commit("loadingPrivateMsg", true);
       this.$api.getPrivateMessageList(minId).then((msgInfos) => {
-        if (msgInfos == null) {
+        if (msgInfos == null || msgInfos.length == 0) {
           this.$store.commit("loadingPrivateMsg", false);
           return;
         }
@@ -237,7 +237,7 @@ export default {
     loadGroupMessage(minId) {
       this.$store.commit("loadingGroupMsg", true);
       this.$api.getGroupMessageList(minId).then((msgInfos) => {
-        if (msgInfos == null) {
+        if (msgInfos == null || msgInfos.length == 0) {
           this.$store.commit("loadingPrivateMsg", false);
           return;
         }

@@ -85,7 +85,7 @@
 			<chat-more-tool ref="chatToolBox" @chatMoreTool="onChatMoreTool"></chat-more-tool>
 			<chat-voice :visible="showVoice" @close="closeVoiceBox" @send="onSendVoice"></chat-voice>
 			<chat-at-box ref="atBox" :ownerId="group.ownerId" :members="groupMembers" :search-text="atSearchText" @select="onAtSelect"></chat-at-box>
-			<send-red-packets ref="sendRedPackets" :visible="showSendRedPacketsDialog" @close="closeSendRedPackets()"></send-red-packets>
+			<send-red-packets ref="sendRedPackets" :visible="showSendRedPacketsDialog" :red-packets-type="redPacketsType" @close="closeSendRedPackets()"></send-red-packets>
 		</el-container>
 	</div>
 </template>
@@ -138,6 +138,7 @@ export default {
 			zhLock: false, // 解决中文输入法触发英文的情况
 			imageIndex: 0, // 图片索引
 			showSendRedPacketsDialog: false, // 是否显示发送红包弹窗
+			redPacketsType: "Normal", // 红包类型，Normal 普通红包，Lucky 手气红包
 		};
 	},
 	methods: {
@@ -575,9 +576,7 @@ export default {
 		// 执行具体操作
 		onChatMoreTool(action) {
 			if(action == "sendRedPacket"){
-				debugger
 				this.showSendRedPackets();
-				//paymentService.sendRedPackets(action);
 			}else if(action == "transfer"){
 				paymentService.transfer(action);
 			}else{
