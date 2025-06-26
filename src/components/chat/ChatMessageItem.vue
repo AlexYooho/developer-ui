@@ -4,10 +4,10 @@
       {{ msgInfo.messageContent }}
     </div>
     <div class="chat-msg-tip" v-show="msgInfo.messageContentType == $enums.MESSAGE_TYPE.TIP_TIME">
-      {{$date.toTimeText(msgInfo.sendTime)}}
+      {{ $date.toTimeText(msgInfo.sendTime) }}
     </div>
-
-    <div class="chat-msg-normal" v-show="msgInfo.messageContentType >= 0 && msgInfo.messageContentType <= 4 && msgInfo.messageStatus != $enums.MESSAGE_STATUS.RECALL" :class="{ 'chat-msg-mine': mine }">
+    <div class="chat-msg-normal" v-show="msgInfo.messageStatus != $enums.MESSAGE_STATUS.RECALL"
+      :class="{ 'chat-msg-mine': mine }">
       <div class="head-image">
         <head-image :name="showName" :size="40" :url="headImage" :id="msgInfo.sendId"></head-image>
       </div>
@@ -20,13 +20,19 @@
           <span>{{ showName }}</span>
           <span>{{ $date.toTimeText(msgInfo.sendTime) }}</span>
         </div>
-        <div class="chat-msg-bottom" style="min-width: 60px; max-width: 300px;" @contextmenu.prevent="showRightMenu($event)">
+        <div class="chat-msg-bottom" style="min-width: 60px; max-width: 300px;"
+          @contextmenu.prevent="showRightMenu($event)">
           <!-- 文本 -->
-          <span class="chat-msg-text" :style="{'text-align':msgInfo.messageContent.length==1?'center':'left'}" v-if="msgInfo.messageContentType == $enums.MESSAGE_TYPE.TEXT && msgInfo.messageStatus != $enums.MESSAGE_STATUS.RECALL" v-html="$emo.transform(msgInfo.messageContent)"></span>
+          <span class="chat-msg-text" :style="{ 'text-align': msgInfo.messageContent.length == 1 ? 'center' : 'left' }"
+            v-if="msgInfo.messageContentType == $enums.MESSAGE_TYPE.TEXT && msgInfo.messageStatus != $enums.MESSAGE_STATUS.RECALL"
+            v-html="$emo.transform(msgInfo.messageContent)"></span>
           <!-- 图片 -->
           <div class="chat-msg-image" v-if="msgInfo.messageContentType == $enums.MESSAGE_TYPE.IMAGE">
-            <div class="img-load-box" v-loading="loading" element-loading-text="上传中" element-loading-background="rgba(0,0,0,0.4)">
-              <el-image style="width: 100px; height: 100px" :src="JSON.parse(msgInfo.messageContent).thumbUrl" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" :preview-src-list="previewImageList" :initial-index="initialIndex" fit="cover" @click="setInitialIndex(msgInfo.id)" />
+            <div class="img-load-box" v-loading="loading" element-loading-text="上传中"
+              element-loading-background="rgba(0,0,0,0.4)">
+              <el-image style="width: 100px; height: 100px" :src="JSON.parse(msgInfo.messageContent).thumbUrl"
+                :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" :preview-src-list="previewImageList"
+                :initial-index="initialIndex" fit="cover" @click="setInitialIndex(msgInfo.id)" />
             </div>
             <span title="发送失败" v-show="loadFail" @click="handleSendFail" class="send-fail el-icon-warning"></span>
           </div>
@@ -34,7 +40,8 @@
           <div class="chat-msg-file" v-if="msgInfo.messageContentType == $enums.MESSAGE_TYPE.FILE">
             <div class="chat-file-box" v-loading="loading">
               <div class="chat-file-info">
-                <el-link class="chat-file-name" :underline="true" target="_blank" type="primary" :href="data.url">{{ data.name }}</el-link>
+                <el-link class="chat-file-name" :underline="true" target="_blank" type="primary" :href="data.url">{{
+                  data.name }}</el-link>
                 <div class="chat-file-size">{{ fileSize }}</div>
               </div>
               <div class="chat-file-icon">
@@ -48,13 +55,22 @@
             <audio controls :src="JSON.parse(msgInfo.messageContent).url"></audio>
           </div> -->
           <!-- 红包 -->
-          <div class="chat-msg-red-packet" v-if="msgInfo.messageContentType == $enums.MESSAGE_TYPE.RED_PACKET">
-            <span>{{ msgInfo.messageContent }}</span>
+          <div class="chat-msg-red-packet" v-if="msgInfo.messageContentType == $enums.MESSAGE_TYPE.RED_PACKETS">
+            <span class="red-packet-icon">🧧</span>
+            <div class="red-packet-title">红包来咯</div>
+            <div class="red-packet-desc">恭喜发财，大吉大利</div>
+            <div class="red-packet-footer">
+              <span class="red-packet-logo">￥</span>
+              <span>收到红包</span>
+            </div>
           </div>
           <!-- 已读未读状态 -->
-          <span class="chat-readed" v-show="msgInfo.selfSend && !msgInfo.groupId && msgInfo.messageStatus == $enums.MESSAGE_STATUS.READED">已读</span>
-          <span class="chat-unread" v-show="msgInfo.selfSend && !msgInfo.groupId && msgInfo.messageStatus != $enums.MESSAGE_STATUS.READED">未读</span>
-          <span class="chat-unread" v-show="msgInfo.selfSend && msgInfo.groupId && msgInfo.unReadCount>0">{{ msgInfo.unReadCount }} 人未读</span>
+          <span class="chat-readed"
+            v-show="msgInfo.selfSend && !msgInfo.groupId && msgInfo.messageStatus == $enums.MESSAGE_STATUS.READED">已读</span>
+          <span class="chat-unread"
+            v-show="msgInfo.selfSend && !msgInfo.groupId && msgInfo.messageStatus != $enums.MESSAGE_STATUS.READED">未读</span>
+          <span class="chat-unread" v-show="msgInfo.selfSend && msgInfo.groupId && msgInfo.unReadCount > 0">{{
+            msgInfo.unReadCount }} 人未读</span>
         </div>
       </div>
     </div>
@@ -106,8 +122,8 @@ export default {
   data() {
     return {
       audioPlayState: "STOP",
-      initialIndex:0,
-      messageIdToIndex:[],
+      initialIndex: 0,
+      messageIdToIndex: [],
       rightMenu: {
         show: false,
         pos: {
@@ -120,23 +136,23 @@ export default {
   methods: {
     setInitialIndex(id) {
       let imageList = [];
-      let index=0;
+      let index = 0;
       let userId = this.$store.state.userStore.userInfo.id;
       let key = "chats-" + userId;
       let item = JSON.parse(localStorage.getItem(key))
-      let messages = item.chats.filter(x=>x.targetId==this.targetId)[0].messages;
-      for(let i=1;i<messages.length;i++){
+      let messages = item.chats.filter(x => x.targetId == this.targetId)[0].messages;
+      for (let i = 1; i < messages.length; i++) {
         var message = messages[i];
-        if(message.messageContentType==this.$enums.MESSAGE_TYPE.IMAGE){
+        if (message.messageContentType == this.$enums.MESSAGE_TYPE.IMAGE) {
           imageList.push({
-            messageid:message.id,
-            indexs:index
+            messageid: message.id,
+            indexs: index
           });
           index++;
         }
       }
-      let imageIndex = imageList.filter(x=>x.messageid==id)[0].indexs;
-      this.initialIndex=imageIndex;
+      let imageIndex = imageList.filter(x => x.messageid == id)[0].indexs;
+      this.initialIndex = imageIndex;
     },
     handleSendFail() {
       this.$message.error(
@@ -164,6 +180,7 @@ export default {
   },
   computed: {
     loading() {
+      debugger;
       return this.msgInfo.loadStatus && this.msgInfo.loadStatus === "loading";
     },
     loadFail() {
@@ -203,10 +220,10 @@ export default {
       let userId = this.$store.state.userStore.userInfo.id;
       let key = "chats-" + userId;
       let item = JSON.parse(localStorage.getItem(key))
-      let messages = item.chats.filter(x=>x.targetId==this.targetId)[0].messages;
-      for(let i=1;i<messages.length;i++){
+      let messages = item.chats.filter(x => x.targetId == this.targetId)[0].messages;
+      for (let i = 1; i < messages.length; i++) {
         var message = messages[i];
-        if(message.messageContentType==this.$enums.MESSAGE_TYPE.IMAGE){
+        if (message.messageContentType == this.$enums.MESSAGE_TYPE.IMAGE) {
           var temp = JSON.parse(message.messageContent)
           imageList.push(temp.originUrl);
         }
@@ -442,5 +459,71 @@ export default {
       }
     }
   }
+}
+
+.chat-msg-red-packet {
+  width: 220px;
+  min-height: 70px;
+  background: linear-gradient(135deg, #fa5151 80%, #fca652 100%);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(250, 81, 81, 0.10);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px 20px 12px 20px;
+  position: relative;
+  overflow: hidden;
+  font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+}
+
+.chat-msg-red-packet .red-packet-icon {
+  position: absolute;
+  left: 20px;
+  bottom: 50px;
+  font-size: 32px;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.chat-msg-red-packet .red-packet-title,
+.chat-msg-red-packet .red-packet-desc,
+.chat-msg-red-packet .red-packet-footer {
+  position: relative;
+  z-index: 1;
+}
+
+.chat-msg-red-packet .red-packet-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+}
+
+.chat-msg-red-packet .red-packet-desc {
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.chat-msg-red-packet .red-packet-footer {
+  margin-top: 10px;
+  font-size: 12px;
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+}
+
+.chat-msg-red-packet .red-packet-footer .red-packet-logo {
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: #fff3e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fa5151;
+  font-size: 14px;
 }
 </style>
