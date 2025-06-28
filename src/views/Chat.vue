@@ -6,18 +6,13 @@
           <el-button slot="append" icon="el-icon-search"></el-button>
         </el-input>
       </div>
-
-      <div class="l-chat-loadding" v-if="loading" v-loading="loading" element-loading-text="消息接收中..."
-        element-loading-spinner="el-icon-loading" element-loading-background="#eee"></div>
-
+      <div class="l-chat-loadding" v-if="loading" v-loading="loading" element-loading-text="消息接收中..." element-loading-spinner="el-icon-loading" element-loading-background="#eee"></div>
       <el-scrollbar class="l-chat-list">
         <div v-for="(chat, index) in chatStore.chats" :key="index">
-          <chat-session v-show="true" :chat="chat" :index="index" :active="index === chatStore.activeIndex"
-            @click.native="handleActiveItem(index)" @delete="handleDelItem(index)" @top="handleTop(index)"></chat-session>
+          <chat-session v-show="true" :chat="chat" :index="index" :active="index === chatStore.activeIndex" @click.native="handleActiveItem(index)" @delete="handleDelItem(index)" @top="handleTop(index)"></chat-session>
         </div>
       </el-scrollbar>
     </el-aside>
-
     <el-container class="r-chat-box">
       <chat-room v-show="activeChat.targetId > 0" :chat="activeChat"></chat-room>
     </el-container>

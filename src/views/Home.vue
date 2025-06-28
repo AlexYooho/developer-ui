@@ -49,8 +49,7 @@
       <setting :visible="showSettingDialog" @close="closeSetting()"></setting>
 
       <!-- 用户信息展示 -->
-      <user-info v-show="uiStore.userInfo.show" :pos="uiStore.userInfo.pos" :user="uiStore.userInfo.user"
-        @close="$store.commit('closeUserInfoBox')"></user-info>
+      <user-info v-show="uiStore.userInfo.show" :pos="uiStore.userInfo.pos" :user="uiStore.userInfo.user" @close="$store.commit('closeUserInfoBox')"></user-info>
 
       <!-- 登录 -->
       <login :visible="showLoginDialog" @close="closeLogin()" @openRegister="showRegister()" @init="init()"></login>

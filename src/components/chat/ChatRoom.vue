@@ -3,8 +3,7 @@
 		<el-container>
 			<el-header height="60px" style="display: flex">
 				<span style="margin-left: 15px">{{ title }}</span>
-				<span title="群聊消息" v-show="this.chat.type == 'GROUP'" class="btn-side el-icon-more"
-					@click="showSidess()"></span>
+				<span title="群聊消息" v-show="this.chat.type == 'GROUP'" class="btn-side el-icon-more" @click="showSidess()"></span>
 			</el-header>
 			<el-main style="padding: 0">
 				<el-container>
@@ -43,8 +42,7 @@
 									</file-upload>
 								</div>
 								<div title="发送语音" class="el-icon-microphone" @click="showVoiceBox()"></div>
-								<div title="视频聊天" v-show="chat.type == 'PRIVATE'" class="el-icon-phone-outline"
-									@click="showVideoBox()"></div>
+								<div title="视频聊天" v-show="chat.type == 'PRIVATE'" class="el-icon-phone-outline" @click="showVideoBox()"></div>
 								<div title="聊天记录" class="el-icon-chat-dot-round" @click="showHistoryBox()"></div>
 								<div title="更多" class="el-icon-more" ref="chatMoreTool" @click.stop="showChatMoreToolox()"></div>
 							</div>
@@ -72,12 +70,10 @@
 						</el-footer>
 					</el-container>
 					<el-aside class="chat-group-side-box" width="300px" v-show="showSide">
-						<chat-group-side :group="group" :groupMembers="groupMembers"
-							@reload="loadGroup(group.id)"></chat-group-side>
+						<chat-group-side :group="group" :groupMembers="groupMembers" @reload="loadGroup(group.id)"></chat-group-side>
 					</el-aside>
 					<el-aside class="chat-group-side-box" width="400px" v-show="showHistory">
-						<chat-history :visible="showHistory" :chat="chat" :friend="friend" :group="group" :groupMembers="groupMembers"
-				@close="closeHistoryBox"></chat-history>
+						<chat-history :visible="showHistory" :chat="chat" :friend="friend" :group="group" :groupMembers="groupMembers" @close="closeHistoryBox"></chat-history>
 					</el-aside>
 				</el-container>
 			</el-main>
