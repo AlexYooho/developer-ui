@@ -145,8 +145,8 @@ export default {
         }
         
         msgInfos.forEach((msgInfo) => {
-          msgInfo.selfSend = msgInfo.sendId == this.$store.state.userStore.userInfo.id;
-          let friendId = msgInfo.selfSend ? msgInfo.receiverId : msgInfo.sendId;
+          msgInfo.self_send = msgInfo.send_id == this.$store.state.userStore.userInfo.id;
+          let friendId = msgInfo.self_send ? msgInfo.receiver_id : msgInfo.send_id;
           let friend = this.$store.state.friendStore.friends.find((f) => f.id == friendId);
           if (friend) {
             this.insertPrivateMessage(friend, msgInfo);
@@ -172,7 +172,7 @@ export default {
       // 插入消息
       this.$store.commit("insertMessage", msg);
       // 播放提示音
-      if (!msg.selfSend && msg.status != this.$enums.MESSAGE_STATUS.READED) {
+      if (!msg.self_send && msg.message_status != this.$enums.MESSAGE_STATUS.READED) {
         this.playAudioTip();
       }
     },

@@ -12,7 +12,7 @@
 							<div class="im-chat-box" id="chatContentBox" @click="closeHistotyMessageBox()">
 								<ul>
 									<li v-for="(msgInfo, idx) in chat.messages" :key="idx">
-										<chat-message-item v-show="idx >= showMinIdx" :mine="msgInfo.sendId == mine.id"
+										<chat-message-item v-show="idx >= showMinIdx" :mine="msgInfo.send_id == mine.id"
 											:headImage="headImage(msgInfo)" :showName="showName(msgInfo)" :msgInfo="msgInfo"
 											:targetId="chat.targetId"
 											@delete="deleteMessage"
@@ -655,11 +655,11 @@ export default {
 		showName(msgInfo) {
 			let name = "";
 			if (this.chat.type == "GROUP") {
-				let member = this.groupMembers.find((m) => m.userId == msgInfo.sendId);
+				let member = this.groupMembers.find((m) => m.userId == msgInfo.send_id);
 				name = member ? member.aliasName : "";
 			} else {
 				name =
-					msgInfo.sendId == this.mine.id
+					msgInfo.send_id == this.mine.id
 						? this.mine.nickname
 						: this.chat.showName;
 			}
@@ -668,10 +668,10 @@ export default {
 		// 头像图片
 		headImage(msgInfo) {
 			if (this.chat.type == "GROUP") {
-				let member = this.groupMembers.find((m) => m.userId == msgInfo.sendId);
+				let member = this.groupMembers.find((m) => m.userId == msgInfo.send_id);
 				return member ? member.headImage : "";
 			} else {
-				return msgInfo.sendId == this.mine.id
+				return msgInfo.send_id == this.mine.id
 					? this.mine.headImageThumb
 					: this.chat.headImage;
 			}

@@ -1,33 +1,33 @@
 <template>
   <div class="chat-msg-item">
-    <div class="chat-msg-tip" v-show="msgInfo.messageStatus == $enums.MESSAGE_STATUS.RECALL">
-      {{ msgInfo.messageContent }}
+    <div class="chat-msg-tip" v-show="msgInfo.message_status == $enums.MESSAGE_STATUS.RECALL">
+      {{ msgInfo.message_content }}
     </div>
-    <div class="chat-msg-tip" v-show="msgInfo.messageContentType == $enums.MESSAGE_TYPE.TIP_TIME">
-      {{ $date.toTimeText(msgInfo.sendTime) }}
+    <div class="chat-msg-tip" v-show="msgInfo.message_content_type == $enums.MESSAGE_TYPE.TIP_TIME">
+      {{ $date.toTimeText(msgInfo.send_time) }}
     </div>
-    <div class="chat-msg-normal" v-show="msgInfo.messageStatus != $enums.MESSAGE_STATUS.RECALL"
+    <div class="chat-msg-normal" v-show="msgInfo.message_status != $enums.MESSAGE_STATUS.RECALL"
       :class="{ 'chat-msg-mine': mine }">
       <div class="head-image">
-        <head-image :name="showName" :size="40" :url="headImage" :id="msgInfo.sendId"></head-image>
+        <head-image :name="showName" :size="40" :url="headImage" :id="msgInfo.send_id"></head-image>
       </div>
 
       <div class="chat-msg-content">
-        <div v-show="mode == 1 && msgInfo.groupId && !msgInfo.selfSend" class="chat-msg-top">
+        <div v-show="mode == 1 && msgInfo.group_id && !msgInfo.self_send" class="chat-msg-top">
           <span>{{ showName }}</span>
         </div>
         <div v-show="mode == 2" class="chat-msg-top">
           <span>{{ showName }}</span>
-          <span>{{ $date.toTimeText(msgInfo.sendTime) }}</span>
+          <span>{{ $date.toTimeText(msgInfo.send_time) }}</span>
         </div>
         <div class="chat-msg-bottom" style="min-width: 60px; max-width: 300px;"
           @contextmenu.prevent="showRightMenu($event)">
           <!-- 文本 -->
-          <span class="chat-msg-text" :style="{ 'text-align': msgInfo.messageContent.length == 1 ? 'center' : 'left' }"
-            v-if="msgInfo.messageContentType == $enums.MESSAGE_TYPE.TEXT && msgInfo.messageStatus != $enums.MESSAGE_STATUS.RECALL"
-            v-html="$emo.transform(msgInfo.messageContent)"></span>
+          <span class="chat-msg-text" :style="{ 'text-align': msgInfo.message_content.length == 1 ? 'center' : 'left' }"
+            v-if="msgInfo.message_content_type == $enums.MESSAGE_TYPE.TEXT && msgInfo.message_status != $enums.MESSAGE_STATUS.RECALL"
+            v-html="$emo.transform(msgInfo.message_content)"></span>
           <!-- 图片 -->
-          <div class="chat-msg-image" v-if="msgInfo.messageContentType == $enums.MESSAGE_TYPE.IMAGE">
+          <div class="chat-msg-image" v-if="msgInfo.message_content_type == $enums.MESSAGE_TYPE.IMAGE">
             <div class="img-load-box" v-loading="loading" element-loading-text="上传中"
               element-loading-background="rgba(0,0,0,0.4)">
               <el-image style="width: 100px; height: 100px" :src="JSON.parse(msgInfo.messageContent).thumbUrl"
@@ -37,7 +37,7 @@
             <span title="发送失败" v-show="loadFail" @click="handleSendFail" class="send-fail el-icon-warning"></span>
           </div>
           <!-- 文件 -->
-          <div class="chat-msg-file" v-if="msgInfo.messageContentType == $enums.MESSAGE_TYPE.FILE">
+          <div class="chat-msg-file" v-if="msgInfo.message_content_type == $enums.MESSAGE_TYPE.FILE">
             <div class="chat-file-box" v-loading="loading">
               <div class="chat-file-info">
                 <el-link class="chat-file-name" :underline="true" target="_blank" type="primary" :href="data.url">{{
@@ -55,7 +55,7 @@
             <audio controls :src="JSON.parse(msgInfo.messageContent).url"></audio>
           </div> -->
           <!-- 红包 -->
-          <div class="chat-msg-red-packet" v-if="msgInfo.messageContentType == $enums.MESSAGE_TYPE.RED_PACKETS">
+          <div class="chat-msg-red-packet" v-if="msgInfo.message_content_type == $enums.MESSAGE_TYPE.RED_PACKETS">
             <span class="red-packet-icon">🧧</span>
             <div class="red-packet-title">红包来咯</div>
             <div class="red-packet-desc">恭喜发财，大吉大利</div>
@@ -66,11 +66,10 @@
           </div>
           <!-- 已读未读状态 -->
           <span class="chat-readed"
-            v-show="msgInfo.selfSend && !msgInfo.groupId && msgInfo.messageStatus == $enums.MESSAGE_STATUS.READED">已读</span>
+            v-show="msgInfo.self_send && !msgInfo.group_id && msgInfo.message_status == $enums.MESSAGE_STATUS.READED">已读</span>
           <span class="chat-unread"
-            v-show="msgInfo.selfSend && !msgInfo.groupId && msgInfo.messageStatus != $enums.MESSAGE_STATUS.READED">未读</span>
-          <span class="chat-unread" v-show="msgInfo.selfSend && msgInfo.groupId && msgInfo.unReadCount > 0">{{
-            msgInfo.unReadCount }} 人未读</span>
+            v-show="msgInfo.self_send && !msgInfo.group_id && msgInfo.message_status != $enums.MESSAGE_STATUS.READED">未读</span>
+          <span class="chat-unread" v-show="msgInfo.self_send && msgInfo.group_id && msgInfo.unReadCount > 0">{{ msgInfo.un_read_count }} 人未读</span>
         </div>
       </div>
     </div>

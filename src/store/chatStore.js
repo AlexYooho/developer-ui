@@ -66,8 +66,8 @@ export default {
 			}
 		},
 		insertMessage(state,msgInfo) {
-			let type = msgInfo.groupId?'GROUP':'PRIVATE';
-			let targetId = msgInfo.groupId?msgInfo.groupId:msgInfo.selfSend?msgInfo.receiverId:msgInfo.sendId;
+			let type = msgInfo.group_id?'GROUP':'PRIVATE';
+			let targetId = msgInfo.group_id?msgInfo.group_id:msgInfo.self_send?msgInfo.receiver_id:msgInfo.send_id;
 			let chat = null;
 			for (let idx in state.chats) {
 				if (state.chats[idx].type == type &&
@@ -78,30 +78,30 @@ export default {
 			}
 
 			// 插入新的数据
-			if (msgInfo.messageContentType == MESSAGE_TYPE.IMAGE) {
+			if (msgInfo.message_content_type == MESSAGE_TYPE.IMAGE) {
 				chat.lastContent = "[图片]";
-			} else if (msgInfo.messageContentType == MESSAGE_TYPE.FILE) {
+			} else if (msgInfo.message_content_type == MESSAGE_TYPE.FILE) {
 				chat.lastContent = "[文件]";
-			} else if (msgInfo.messageContentType == MESSAGE_TYPE.RED_PACKETS) {
+			} else if (msgInfo.message_content_type == MESSAGE_TYPE.RED_PACKETS) {
 				chat.lastContent = "[红包]";
-			} else if (msgInfo.messageContentType == MESSAGE_TYPE.TRANSFER) {
+			} else if (msgInfo.message_content_type == MESSAGE_TYPE.TRANSFER) {
 				chat.lastContent = "[转账]";
 			} else {
-				chat.lastContent = msgInfo.messageContent;
+				chat.lastContent = msgInfo.message_content;
 			}
-			chat.lastSendTime = msgInfo.sendTime;
-			chat.sendNickName = msgInfo.sendNickName;
+			chat.lastSendTime = msgInfo.send_time;
+			chat.sendNickName = msgInfo.send_nickname;
 			// 未读加1
-			if (!msgInfo.selfSend && msgInfo.messageStatus != MESSAGE_STATUS.READED) {
+			if (!msgInfo.self_send && msgInfo.message_status != MESSAGE_STATUS.READED) {
 				chat.unreadCount++;
 			}
 			// 是否有人@我
-			if(!msgInfo.selfSend && chat.type=="GROUP" && msgInfo.atUserIds){
+			if(!msgInfo.self_send && chat.type=="GROUP" && msgInfo.at_user_ids){
 				let userId = userStore.state.userInfo.id;
-				if(msgInfo.atUserIds.indexOf(userId)>=0){
+				if(msgInfo.at_user_ids.indexOf(userId)>=0){
 					chat.atMe = true;
 				}
-				if(msgInfo.atUserIds.indexOf(-1)>=0){
+				if(msgInfo.at_user_ids.indexOf(-1)>=0){
 					chat.atAll = true;
 				}
 			}
@@ -120,20 +120,19 @@ export default {
 					return;
 				}
 				// 正在发送中的消息可能没有id,通过发送时间判断
-				if (msgInfo.selfSend && chat.messages[idx].selfSend &&
-					chat.messages[idx].sendTime == msgInfo.sendTime) {
+				if (msgInfo.self_send && chat.messages[idx].self_send && chat.messages[idx].send_time == msgInfo.send_time) {
 					Object.assign(chat.messages[idx], msgInfo);
 					this.commit("saveToStorage");
 					return;
 				}
 			}
 			// 间隔大于10分钟插入时间显示
-			if (!chat.lastTimeTip || (chat.lastTimeTip < msgInfo.sendTime - 600 * 1000)) {
+			if (!chat.lastTimeTip || (chat.lastTimeTip < msgInfo.send_time - 600 * 1000)) {
 				chat.messages.push({
-					sendTime: msgInfo.sendTime,
+					send_time: msgInfo.send_time,
 					type: MESSAGE_TYPE.TIP_TIME,
 				});
-				chat.lastTimeTip = msgInfo.sendTime;
+				chat.lastTimeTip = msgInfo.send_time;
 			}
 			// 新的消息
 			chat.messages.push(msgInfo);
@@ -185,9 +184,9 @@ export default {
 					state.chats[idx].atAll = false; 
 					for(let i in state.chats[idx].messages){
 						if(chatInfo.messageId==state.chats[idx].messages[i].id){
-							state.chats[idx].messages[i].messageStatus=chatInfo.messageStatus;
-							state.chats[idx].messages[i].readCount+=1;
-							state.chats[idx].messages[i].unReadCount-=1;
+							state.chats[idx].messages[i].message_status=chatInfo.messageStatus;
+							state.chats[idx].messages[i].read_count+=1;
+							state.chats[idx].messages[i].un_read_count-=1;
 						}
 					}
 				}
@@ -221,9 +220,9 @@ export default {
 					state.chats[idx].targetId == friendId) {
 					state.chats[idx].messages.forEach((m) => {
 						let messageStatus = MESSAGE_STATUS.RECALL;
-						if (m.selfSend && m.messageStatus != messageStatus) {
+						if (m.self_send && m.message_status != messageStatus) {
 							messageStatus = MESSAGE_STATUS.READED;
-							m.messageStatus = messageStatus
+							m.message_status = messageStatus
 						}
 					})
 				}
@@ -246,7 +245,7 @@ export default {
 					chat.messages.splice(idx,1);
 					break;
 				}
-				if(msgInfo.selfSend && chat.messages[idx].selfSend && chat.messages[idx].sendTime==msgInfo.sendTime){
+				if(msgInfo.self_send && chat.messages[idx].self_send && chat.messages[idx].send_time==msgInfo.send_time){
 					chat.messages.splice(idx,1);
 					break;
 				}
