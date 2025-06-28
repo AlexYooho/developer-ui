@@ -94,8 +94,8 @@ export default {
         .dispatch("load")
         .then(() => {
           // 加载会话列表
-          this.loadPrivateMessage(this.$store.state.chatStore.privateMsgMaxId);
-          this.loadGroupMessage(this.$store.state.chatStore.groupMsgMaxId);
+          this.loadPrivateMessage(this.$store.state.chatStore.private_msg_max_id);
+          this.loadGroupMessage(this.$store.state.chatStore.group_msg_max_id);
           this.$wsApi.connect(
             "ws://localhost:8867/im",
             sessionStorage.getItem("accessToken")

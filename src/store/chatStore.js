@@ -7,8 +7,8 @@ import userStore from "./userStore.js";
 export default {
     state: {
         activeIndex: -1,
-		privateMsgMaxId: 0,
-		groupMsgMaxId: 0,
+		private_msg_max_id: 0,
+		group_msg_max_id: 0,
 		loadingPrivateMsg: false,
 		loadingGroupMsg: false,
 		chats: []
@@ -17,8 +17,8 @@ export default {
     mutations:{
         initChats(state, chatsData) {
 			state.chats = chatsData.chats || [];
-			state.privateMsgMaxId = chatsData.privateMsgMaxId || 0;
-			state.groupMsgMaxId = chatsData.groupMsgMaxId || 0;
+			state.private_msg_max_id = chatsData.private_msg_max_id || 0;
+			state.group_msg_max_id = chatsData.group_msg_max_id || 0;
 			// 防止图片一直处在加载中状态
 			state.chats.forEach((chat) => {
 				chat.messages.forEach((msg) => {
@@ -106,11 +106,11 @@ export default {
 				}
 			}
 			// 记录消息的最大id
-			if (msgInfo.id && type == "PRIVATE" && msgInfo.id > state.privateMsgMaxId) {
-				state.privateMsgMaxId = msgInfo.id;
+			if (msgInfo.id && type == "PRIVATE" && msgInfo.id > state.private_msg_max_id) {
+				state.private_msg_max_id = msgInfo.id;
 			}
-			if (msgInfo.id && type == "GROUP" && msgInfo.id > state.groupMsgMaxId) {
-				state.groupMsgMaxId = msgInfo.id;
+			if (msgInfo.id && type == "GROUP" && msgInfo.id > state.group_msg_max_id) {
+				state.group_msg_max_id = msgInfo.id;
 			}
 			// 如果是已存在消息，则覆盖旧的消息数据
 			for (let idx in chat.messages) {
@@ -166,8 +166,8 @@ export default {
 			let userId = userStore.state.userInfo.id;
 			let key = "chats-" + userId;
 			let chatsData = {
-				privateMsgMaxId: state.privateMsgMaxId,
-				groupMsgMaxId: state.groupMsgMaxId,
+				private_msg_max_id: state.private_msg_max_id,
+				group_msg_max_id: state.group_msg_max_id,
 				chats: state.chats
 			}
 			localStorage.setItem(key, JSON.stringify(chatsData));
