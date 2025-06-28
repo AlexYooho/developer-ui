@@ -180,7 +180,6 @@ export default {
   },
   computed: {
     loading() {
-      debugger;
       return this.msgInfo.loadStatus && this.msgInfo.loadStatus === "loading";
     },
     loadFail() {

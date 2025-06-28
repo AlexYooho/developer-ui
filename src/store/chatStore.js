@@ -77,7 +77,6 @@ export default {
 				}
 			}
 
-			debugger
 			// 插入新的数据
 			if (msgInfo.messageContentType == MESSAGE_TYPE.IMAGE) {
 				chat.lastContent = "[图片]";
