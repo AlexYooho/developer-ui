@@ -77,14 +77,15 @@ export default {
 				}
 			}
 
+			debugger
 			// 插入新的数据
-			if (msgInfo.type == MESSAGE_TYPE.IMAGE) {
+			if (msgInfo.messageContentType == MESSAGE_TYPE.IMAGE) {
 				chat.lastContent = "[图片]";
-			} else if (msgInfo.type == MESSAGE_TYPE.FILE) {
+			} else if (msgInfo.messageContentType == MESSAGE_TYPE.FILE) {
 				chat.lastContent = "[文件]";
-			} else if (msgInfo.type == MESSAGE_TYPE.RED_PACKET) {
+			} else if (msgInfo.messageContentType == MESSAGE_TYPE.RED_PACKETS) {
 				chat.lastContent = "[红包]";
-			} else if (msgInfo.type == MESSAGE_TYPE.TRANSFER) {
+			} else if (msgInfo.messageContentType == MESSAGE_TYPE.TRANSFER) {
 				chat.lastContent = "[转账]";
 			} else {
 				chat.lastContent = msgInfo.messageContent;

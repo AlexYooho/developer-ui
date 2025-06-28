@@ -146,12 +146,9 @@ export default {
         }
         
         msgInfos.forEach((msgInfo) => {
-          msgInfo.selfSend =
-            msgInfo.sendId == this.$store.state.userStore.userInfo.id;
+          msgInfo.selfSend = msgInfo.sendId == this.$store.state.userStore.userInfo.id;
           let friendId = msgInfo.selfSend ? msgInfo.receiverId : msgInfo.sendId;
-          let friend = this.$store.state.friendStore.friends.find(
-            (f) => f.id == friendId
-          );
+          let friend = this.$store.state.friendStore.friends.find((f) => f.id == friendId);
           if (friend) {
             this.insertPrivateMessage(friend, msgInfo);
           }
@@ -165,24 +162,6 @@ export default {
       });
     },
     insertPrivateMessage(friend, msg) {
-      if (
-        msg.type >= this.$enums.MESSAGE_TYPE.RTC_CALL &&
-        msg.type <= this.$enums.MESSAGE_TYPE.RTC.CANDIDATE
-      ) {
-        if (
-          msg.type == this.$enums.MESSAGE_TYPE.RTC_CALL ||
-          msg.type == this.$enums.MESSAGE_TYPE.RTC_CANCEL
-        ) {
-          this.$store.commit("showVideoAcceptorBox", friend);
-          this.$refs.videoAcceptor.handleMessage(msg);
-        } else {
-          this.$refs.videoAcceptor.close();
-          this.$refs.privateVideo.handleMessage(msg);
-        }
-
-        return;
-      }
-
       let chatInfo = {
         type: "PRIVATE",
         targetId: friend.id,
