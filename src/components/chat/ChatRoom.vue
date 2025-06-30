@@ -59,8 +59,7 @@
 								<div v-show="sendImageUrl" class="send-image-area">
 									<div class="send-image-box">
 										<img class="send-image" :src="sendImageUrl" />
-										<span class="send-image-close el-icon-close" title="删除"
-											@click="removeSendImage()"></span>
+										<span class="send-image-close el-icon-close" title="删除" @click="removeSendImage()"></span>
 									</div>
 								</div>
 								<div class="send-btn-area">
@@ -81,7 +80,7 @@
 			<chat-more-tool ref="chatToolBox" @chatMoreTool="onChatMoreTool"></chat-more-tool>
 			<chat-voice :visible="showVoice" @close="closeVoiceBox" @send="onSendVoice"></chat-voice>
 			<chat-at-box ref="atBox" :ownerId="group.ownerId" :members="groupMembers" :search-text="atSearchText" @select="onAtSelect"></chat-at-box>
-			<send-red-packets ref="sendRedPackets" :visible="showSendRedPacketsDialog" :red-packets-type="redPacketsType" @close="closeSendRedPackets()"></send-red-packets>
+			<send-red-packets ref="sendRedPackets" :visible="showSendRedPacketsDialog" :red-packets-type="redPacketsType" @close="closeSendRedPackets()" @success="handleSendRedPacketsSuccess()" @failure="handleSendRedPacketsFailure()"></send-red-packets>
 		</el-container>
 	</div>
 </template>
@@ -339,25 +338,26 @@ export default {
 
 			this.$refs.editBox.cle;
 			let msgInfo = {
-				messageContent: sendText,
-				messageMainType: 0,
-				messageContentType:0
+				message_content: sendText,
+				message_main_type: "PRIVATE_MESSAGE",
+				message_content_type:0
 			};
 
 			this.fillTargetId(msgInfo, this.chat.targetId);
 			if (this.chat.type == "GROUP") {
-				msgInfo.atUserIds = this.createAtUserIds();
+				msgInfo.at_user_ids = this.createAtUserIds();
+				msgInfo.message_main_type = "GROUP_MESSAGE";
 			}
 
 			this.lockMessage = true;
 			this.$api.sendMessage(this.chat.type.toLowerCase(),msgInfo).then((res) => {
 					msgInfo.id = res.id;
-					msgInfo.selfSend = true;
-					msgInfo.sendId = this.$store.state.userStore.userInfo.id;
-					msgInfo.sendTime = new Date().getTime();
-					msgInfo.messageStatus = this.$enums.MESSAGE_STATUS.UNSEND;
-					msgInfo.unReadCount=res.unReadCount;
-					msgInfo.readCount=res.readCount;
+					msgInfo.self_send = true;
+					msgInfo.send_id = this.$store.state.userStore.userInfo.id;
+					msgInfo.send_time = new Date().getTime();
+					msgInfo.message_status = this.$enums.MESSAGE_STATUS.UNSEND;
+					msgInfo.un_read_count=res.unReadCount;
+					msgInfo.read_count=res.readCount;
 
 					this.$store.commit("insertMessage", msgInfo);
 				})
@@ -588,6 +588,30 @@ export default {
 			this.showSendRedPacketsDialog = false;
 		},
 
+		// 处理发红包成功逻辑
+		handleSendRedPacketsSuccess(id) {
+			this.$message.success("红包发送成功");
+			// 发送前端红包消息
+			let msgInfo = {
+				id: 111,
+				message_content: "红包",
+				message_content_type: "RED_PACKETS",
+				message_status: "UNSEND",
+				receiver_id: this.chat.targetId,
+				self_send: true,
+				send_id: this.$store.state.userStore.userInfo.id,
+				send_nickname: null,
+				send_time: new Date().getTime(),
+			};
+			this.$store.commit("insertMessage", msgInfo);
+			this.closeSendRedPackets();
+		},
+
+		// 处理发红包失败逻辑
+		handleSendRedPacketsFailure() {
+			
+		},
+
 		// 公共事件
 		// 展示群聊信息栏
 		showSidess() {
@@ -624,11 +648,11 @@ export default {
 		// 填充对方id
 		fillTargetId(msgInfo, targetId) {
 			if (this.chat.type == "GROUP") {
-				msgInfo.groupId = targetId;
-				msgInfo.messageMainType = 1;
+				msgInfo.group_id = targetId;
+				msgInfo.message_main_type = 1;
 			} else {
-				msgInfo.receiverId = targetId;
-				msgInfo.messageMainType = 0;
+				msgInfo.receiver_id = targetId;
+				msgInfo.message_main_type = 0;
 			}
 		},
 		// 加载群组

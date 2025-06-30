@@ -154,9 +154,7 @@ export default {
       this.initialIndex = imageIndex;
     },
     handleSendFail() {
-      this.$message.error(
-        "该文件已发送失败，目前不支持自动重新发送，建议手动重新发送"
-      );
+      this.$message.error("该文件已发送失败，目前不支持自动重新发送，建议手动重新发送");
     },
     handlePlayVoice() {
       if (!this.audio) {

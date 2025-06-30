@@ -45,17 +45,17 @@ export default {
         this.$emit("close");
     },
     handleSubmit() {
-        this.visible = false;
         // 发红包逻辑
         this.$api.sendRedPacket(this.amount, 2,1,this.type,0)
             .then(() => {
-                this.$message.success("红包发送成功");
+                // 发送红包成功
+                 this.visible = false;
+                this.$emit("success");
             })
             .catch((error) => {
-                this.$message.error("红包发送失败: " + error.message);
+                // 处理发送失败
+                this.$emit("failure");
             });
-
-        this.$emit("close");
     }
   }
 };
