@@ -46,11 +46,10 @@ export default {
     },
     handleSubmit() {
         // 发红包逻辑
-        this.$api.sendRedPacket(this.amount, 2,1,this.type,0)
-            .then(() => {
+        this.$api.sendRedPacket(this.amount, 2,1,this.type,0).then((res) => {
                 // 发送红包成功
-                 this.visible = false;
-                this.$emit("success");
+                this.visible = false;
+                this.$emit("success",res.id);
             })
             .catch((error) => {
                 // 处理发送失败
