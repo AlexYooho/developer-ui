@@ -80,7 +80,7 @@
 			<chat-more-tool ref="chatToolBox" @chatMoreTool="onChatMoreTool"></chat-more-tool>
 			<chat-voice :visible="showVoice" @close="closeVoiceBox" @send="onSendVoice"></chat-voice>
 			<chat-at-box ref="atBox" :ownerId="group.ownerId" :members="groupMembers" :search-text="atSearchText" @select="onAtSelect"></chat-at-box>
-			<send-red-packets ref="sendRedPackets" :visible="showSendRedPacketsDialog" :red-packets-type="redPacketsType" @close="closeSendRedPackets" @success="handleSendRedPacketsSuccess" @failure="handleSendRedPacketsFailure"></send-red-packets>
+			<send-red-packets ref="sendRedPackets" :visible="showSendRedPacketsDialog" :targetId="chat.targetId" :red-packets-type="redPacketsType" @close="closeSendRedPackets" @success="handleSendRedPacketsSuccess" @failure="handleSendRedPacketsFailure"></send-red-packets>
 		</el-container>
 	</div>
 </template>

@@ -67,7 +67,7 @@ export default {
 		},
 		insertMessage(state,msgInfo) {
 			let type = msgInfo.group_id?'GROUP':'PRIVATE';
-			let targetId = msgInfo.group_id?msgInfo.group_id:msgInfo.self_send?msgInfo.receiver_id:msgInfo.sender_info.sender_id;
+			let targetId = msgInfo.group_id ? msgInfo.group_id : msgInfo.self_send ? msgInfo.receiver_id : msgInfo.send_id;
 			let chat = null;
 			for (let idx in state.chats) {
 				if (state.chats[idx].type == type &&

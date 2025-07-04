@@ -30,6 +30,10 @@ export default {
     redPacketsType: {
       type: String,
       default: "Normal"
+    },
+    targetId: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -46,7 +50,7 @@ export default {
     },
     handleSubmit() {
         // 发红包逻辑
-        this.$api.sendRedPacket(this.amount, 2,1,this.type,0).then((res) => {
+        this.$api.sendRedPacket(this.amount, this.targetId,1,this.type,0).then((res) => {
                 // 发送红包成功
                 this.visible = false;
                 this.$emit("success",res.id);
