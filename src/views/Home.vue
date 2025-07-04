@@ -100,7 +100,7 @@ export default {
             sessionStorage.getItem("accessToken")
           );
           this.$wsApi.onMessage((cmd, msgInfo) => {
-            if (cmd == 2) { // 强制下线
+            if (cmd == this.$enums.CMD_TYPE.FORCE_LOGOUT) { // 强制下线
               this.$wsApi.close(3000);
               this.$alert("您已在其他地方登陆，将被强制下线", "强制下线通知", {
                 confirmButtonText: "确定",
@@ -108,13 +108,13 @@ export default {
                   this.showLogin();
                 },
               });
-            } else if (cmd == 3) { // 私聊
+            } else if (cmd == this.$enums.CMD_TYPE.PRIVATE_MESSAGE) { // 私聊
               this.handlePrivateMessage(msgInfo);
-            } else if (cmd == 4) { // 群聊
+            } else if (cmd == this.$enums.CMD_TYPE.GROUP_MESSAGE) { // 群聊
               this.handleGroupMessage(msgInfo);
-            } else if (cmd == 5) { // 系统消息
+            } else if (cmd == this.$enums.CMD_TYPE.SYSTEM_MESSAGE) { // 系统消息
               this.handleSystemMessage(msgInfo);
-            } else if (cmd == 6) { // 订阅消息
+            } else if (cmd == this.$enums.CMD_TYPE.SUBSCRIBE_MESSAGE) { // 订阅消息
               this.handleSubMessage(msgInfo);
             }
           });
@@ -177,10 +177,10 @@ export default {
       }
     },
     handlePrivateMessage(msg) {
-      msg.selfSend = msg.sendId == this.$store.state.userStore.userInfo.id;
-      let friendId = msg.selfSend ? msg.recvId : msg.sendId;
-      if (msg.messageStatus == this.$enums.MESSAGE_STATUS.READED) {
-        if (msg.selfSend) {
+      msg.data.self_send = msg.data.sender_info.sender_id == this.$store.state.userStore.userInfo.id;
+      let friendId = msg.data.self_send ? msg.data.receiverId : msg.data.sender_info.sender_id;
+      if (msg.data.messageStatus == this.$enums.MESSAGE_STATUS.READED) {
+        if (msg.data.self_send) {
           let chatInfo = {
             type: "PRIVATE",
             targetId: friendId,
@@ -192,7 +192,7 @@ export default {
         return;
       }
       this.loadFriendInfo(friendId).then((friend) => {
-        this.insertPrivateMessage(friend, msg);
+        this.insertPrivateMessage(friend, msg.data);
       });
     },
     loadFriendInfo(id) {

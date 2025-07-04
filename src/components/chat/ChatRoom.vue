@@ -340,7 +340,7 @@ export default {
 			let msgInfo = {
 				message_content: sendText,
 				message_main_type: "PRIVATE_MESSAGE",
-				message_content_type:0
+				message_content_type:"TEXT"
 			};
 
 			this.fillTargetId(msgInfo, this.chat.targetId);
@@ -604,6 +604,8 @@ export default {
 				send_time: new Date().getTime(),
 			};
 			this.$store.commit("insertMessage", msgInfo);
+			this.lockMessage = false;
+			this.scrollToBottom();
 			this.closeSendRedPackets();
 		},
 
