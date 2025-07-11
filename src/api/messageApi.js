@@ -15,7 +15,7 @@ const messageApi = {
     // 获取历史消息
     getHistoryMessage(chatType, param) {
         chatType = chatType.toUpperCase() + "_MESSAGE";
-        return http.GET(`/message-module/api/message/${chatType}/history`, param);
+        return http.POST(`/message-module/api/message/${chatType}/history`, param);
     },
 
     // 发送消息
@@ -33,7 +33,8 @@ const messageApi = {
     // 已读消息
     readedMessage(chatType, targetId) {
         chatType = chatType.toUpperCase() + "_MESSAGE";
-        return http.POST(`/message-module/api/message/${chatType}/readed?targetId=${targetId}`);
+        let param = {target_id: targetId};
+        return http.POST(`/message-module/api/message/${chatType}/read`,param);
     }
 };
 

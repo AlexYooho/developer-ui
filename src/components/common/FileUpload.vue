@@ -12,7 +12,7 @@ export default {
   data() {
     return {
       loading: null,
-      uploadHeaders: { authorization: sessionStorage.getItem("accessToken") },
+      uploadHeaders: { authorization: 'Bearer ' + sessionStorage.getItem("accessToken") },
     };
   },
   props: {

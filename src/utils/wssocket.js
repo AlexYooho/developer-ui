@@ -1,3 +1,7 @@
+import {
+    CMD_TYPE
+} from "../utils/enums.js"
+
 var websock = null;
 let rec; //断线重连后，延迟5秒重新创建WebSocket连接  rec用来存储延迟请求的代码
 let isConnect = false; //连接标识 避免重复连接
@@ -13,9 +17,9 @@ let connect = (wsurl, accessToken) => {
 		websock = new WebSocket(wsurl);
 		websock.onmessage = function (e) {
 			let sendInfo = JSON.parse(e.data)
-			if (sendInfo.cmd == 0) {
+			if (sendInfo.cmd == CMD_TYPE.LOGIN) {
 				heartCheck.start()
-			} else if (sendInfo.cmd == 1) {
+			} else if (sendInfo.cmd == CMD_TYPE.HEART_BEAT) {
 				// 重新开启心跳定时
 				heartCheck.reset();
 			} else {

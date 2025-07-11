@@ -10,19 +10,20 @@ const http = {
         if(params)  config.params=params;
         return httpRequest(config);
     },
-    POST(url,params,headers){
+    POST(url,params,headers={}){
         const config={
             method: 'POST',
-            url: url
+            url: url,
+            headers: headers
         }
 
         if(params){
             config.data=params;
         }
 
-        if(headers){
-            config.headers=headers;
-        }
+        // if(headers){
+        //     config.headers=headers;
+        // }
 
         return httpRequest(config);
     },

@@ -5,10 +5,7 @@ import { Message } from 'element-ui';
 const http = axios.create({
     baseURL: "http://localhost:9009",
     timeout: 30000,
-    withCredentials: true,
-    headers: {
-        'Content-Type': 'application/json; charset=utf-8'
-    }
+    withCredentials: true
 })
 
 // 请求

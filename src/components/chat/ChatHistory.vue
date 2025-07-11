@@ -3,7 +3,7 @@
             <el-scrollbar class="chat-history-scrollbar" id ="historyScrollbar" ref="scrollbar">
                 <ul>
                     <li v-for="(msgInfo,idx) in messages" :key="idx">
-                        <chat-message-item :mode="2" :mine="msgInfo.sendId == mine.id" :headImage="headImage(msgInfo)" :showName="showName(msgInfo)"
+                        <chat-message-item :mode="2" :mine="msgInfo.send_id == mine.id" :headImage="headImage(msgInfo)" :showName="showName(msgInfo)"
 						 :msgInfo="msgInfo" :menu="false" :targetId="chat.targetId"></chat-message-item>
                     </li>
                 </ul>
@@ -71,14 +71,17 @@ export default{
 					size:this.size
 				}
 				if(this.chat.type=='GROUP'){
-					param.targetId = this.group.id;
+					param.target_id = this.group.id;
 				}else{
-					param.targetId = this.friend.id;
+					param.target_id = this.friend.id;
 				}
 
 				this.loading = true;
 				this.$api.getHistoryMessage(this.chat.type.toLowerCase(),param).then(message=>{
-					message.forEach(m=>this.messages.unshift(m));
+					message.forEach(m=>{
+						m.self_send = m.send_id == this.$store.state.userStore.userInfo.id;
+						this.messages.unshift(m)
+					});
 					this.loading=false;
 					if(message.length<this.size){
 						this.loadAll = true;

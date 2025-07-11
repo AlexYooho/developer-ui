@@ -30,7 +30,7 @@
           <div class="chat-msg-image" v-if="msgInfo.message_content_type == $enums.MESSAGE_TYPE.IMAGE">
             <div class="img-load-box" v-loading="loading" element-loading-text="上传中"
               element-loading-background="rgba(0,0,0,0.4)">
-              <el-image style="width: 100px; height: 100px" :src="JSON.parse(msgInfo.messageContent).thumbUrl"
+              <el-image style="width: 100px; height: 100px" :src="JSON.parse(msgInfo.message_content).thumbUrl"
                 :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" :preview-src-list="previewImageList"
                 :initial-index="initialIndex" fit="cover" @click="setInitialIndex(msgInfo.id)" />
             </div>
@@ -142,7 +142,7 @@ export default {
       let messages = item.chats.filter(x => x.targetId == this.targetId)[0].messages;
       for (let i = 1; i < messages.length; i++) {
         var message = messages[i];
-        if (message.messageContentType == this.$enums.MESSAGE_TYPE.IMAGE) {
+        if (message.message_content_type == this.$enums.MESSAGE_TYPE.IMAGE) {
           imageList.push({
             messageid: message.id,
             indexs: index
@@ -219,8 +219,8 @@ export default {
       let messages = item.chats.filter(x => x.targetId == this.targetId)[0].messages;
       for (let i = 1; i < messages.length; i++) {
         var message = messages[i];
-        if (message.messageContentType == this.$enums.MESSAGE_TYPE.IMAGE) {
-          var temp = JSON.parse(message.messageContent)
+        if (message.message_content_type == this.$enums.MESSAGE_TYPE.IMAGE) {
+          var temp = JSON.parse(message.message_content)
           imageList.push(temp.originUrl);
         }
       }

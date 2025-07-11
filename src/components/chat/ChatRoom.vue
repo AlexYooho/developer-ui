@@ -80,7 +80,7 @@
 			<chat-more-tool ref="chatToolBox" @chatMoreTool="onChatMoreTool"></chat-more-tool>
 			<chat-voice :visible="showVoice" @close="closeVoiceBox" @send="onSendVoice"></chat-voice>
 			<chat-at-box ref="atBox" :ownerId="group.ownerId" :members="groupMembers" :search-text="atSearchText" @select="onAtSelect"></chat-at-box>
-			<send-red-packets ref="sendRedPackets" :visible="showSendRedPacketsDialog" :targetId="chat.targetId" :red-packets-type="redPacketsType" @close="closeSendRedPackets" @success="handleSendRedPacketsSuccess" @failure="handleSendRedPacketsFailure"></send-red-packets>
+			<send-red-packets ref="sendRedPackets" :visible="showSendRedPacketsDialog" :targetId="this.chat.targetId" :red-packets-type="redPacketsType" @close="closeSendRedPackets" @success="handleSendRedPacketsSuccess" @failure="handleSendRedPacketsFailure"></send-red-packets>
 		</el-container>
 	</div>
 </template>
@@ -219,6 +219,7 @@ export default {
 		},
 		// 文本框粘贴事件
 		onEditorPaste(e) {
+			debugger
 			let txt = event.clipboardData.getData('Text');
 			if (typeof (txt) == 'string') {
 				let range = window.getSelection().getRangeAt(0)
@@ -313,13 +314,10 @@ export default {
 		sendImageMessage() {
 			let file = this.sendImageFile;
 			this.onImageBefore(this.sendImageFile);
-			let formData = new FormData();
-			formData.append('file', file.raw || file);
-			this.$api.uploadImage(formData,{
-				headers: {
-					'Content-type': 'multipart/form-data'
-				}
-			}).then((data) => {
+			const formData = new FormData();
+			formData.append('file', file); // 一定是 'file'
+			this.$api.uploadImage(formData)
+			.then((data) => {
 				this.onImageSuccess(data, file);
 			}).catch((res) => {
 				this.onImageSuccess(res, file);
@@ -376,9 +374,9 @@ export default {
 			this.$api.recallMessage(this.chat.type.toLowerCase(),msgInfo.id).then((res) => {
 				this.$message.success("消息已撤回");
 				msgInfo = JSON.parse(JSON.stringify(msgInfo));
-				msgInfo.messageContentType = 0;
-				msgInfo.messageContent = "你撤回了一条消息";
-				msgInfo.messageStatus = this.$enums.MESSAGE_STATUS.RECALL;
+				msgInfo.message_content_type = 0;
+				msgInfo.message_content = "你撤回了一条消息";
+				msgInfo.message_status = this.$enums.MESSAGE_STATUS.RECALL;
 				this.$store.commit("insertMessage", msgInfo);
 			});
 		},
@@ -414,10 +412,10 @@ export default {
 		// 图片发送成功事件
 		onImageSuccess(data, file) {
 			let msgInfo = JSON.parse(JSON.stringify(file.msgInfo || file.raw.msgInfo));
-			msgInfo.messageContent=JSON.stringify(data);
-			this.$api.sendMessage(this.chat.type.toLowerCase(),msgInfo).then((id) => {
+			msgInfo.message_content=JSON.stringify(data);
+			this.$api.sendMessage(this.chat.type.toLowerCase(),msgInfo).then((res) => {
 				msgInfo.loadStatus = 'ok';
-				msgInfo.id = id;
+				msgInfo.id = res.id;
 				this.$store.commit("insertMessage", msgInfo);
 			})
 		},
@@ -436,15 +434,13 @@ export default {
 			}
 			let msgInfo = {
 				id: 0,
-				fileId: file.uid,
-				sendId: this.mine.id,
-				messageMainType: 0,
-				messageContent: JSON.stringify(data),
-				messageContentType: 1,
-				sendTime: new Date().getTime(),
-				messageStatus: this.$enums.MESSAGE_STATUS.UNSEND,
-				selfSend: true,
-				loadStatus: "loading"
+				message_content: JSON.stringify(data),
+				message_content_type: this.$enums.MESSAGE_TYPE.IMAGE,
+				message_status: this.$enums.MESSAGE_STATUS.UNSEND,
+				receiver_id: this.chat.targetId,
+				self_send: true,
+				send_id: this.mine.id,
+				send_time: new Date().getTime(),
 			}
 			this.fillTargetId(msgInfo, this.chat.targetId);
 			this.$store.commit("insertMessage", msgInfo);
@@ -461,9 +457,9 @@ export default {
 
 			let msgInfo = JSON.parse(JSON.stringify(file.raw.msgInfo));
 			msgInfo.content = JSON.stringify(data);
-			this.$api.sendMessage(this.chat.type.toLowerCase(),msgInfo).then((id) => {
+			this.$api.sendMessage(this.chat.type.toLowerCase(),msgInfo).then((res) => {
 				msgInfo.loadStatus = 'ok';
-				msgInfo.id = id;
+				msgInfo.id = res.id;
 				this.$store.commit("insertMessage", msgInfo);
 			})
 		},
@@ -484,13 +480,13 @@ export default {
 
 			let msgInfo = {
 				id: 0,
-				sendId: this.mine.id,
-				content: JSON.stringify(data),
-				sendTime: new Date().getTime(),
-				selfSend: true,
-				type: 2,
-				loadStatus: "loading",
-				status: this.$enums.MESSAGE_STATUS_UNSEND
+				message_content: JSON.stringify(data),
+				message_content_type: this.$enums.MESSAGE_TYPE.IMAGE,
+				message_status: this.$enums.MESSAGE_STATUS_UNSEND,
+
+				self_send: true,
+				send_id: this.mine.id,
+				send_time: new Date().getTime(),
 			}
 			this.fillTargetId(msgInfo, this.chat.targetId);
 			this.$store.commit("insertMessage", msgInfo);
@@ -651,10 +647,10 @@ export default {
 		fillTargetId(msgInfo, targetId) {
 			if (this.chat.type == "GROUP") {
 				msgInfo.group_id = targetId;
-				msgInfo.message_main_type = 1;
+				msgInfo.message_main_type = "GROUP_MESSAGE";
 			} else {
 				msgInfo.receiver_id = targetId;
-				msgInfo.message_main_type = 0;
+				msgInfo.message_main_type = "PRIVATE_MESSAGE";
 			}
 		},
 		// 加载群组
@@ -723,10 +719,10 @@ export default {
 			return title;
 		},
 		imageAction() {
-			return `http://localhost:8090/oss/image/upload`;
+			return `http://localhost:9009/oss-module/api/oss/image/upload`;
 		},
 		fileAction() {
-			return `http://localhost:8090/oss/file/upload`;
+			return `http://localhost:9009/oss-module/api/oss/file/upload`;
 		},
 		messageAction() {
 			return `/message/${this.chat.type.toLowerCase()}/send`;
@@ -833,7 +829,7 @@ export default {
 			height: 40px;
 			text-align: left;
 			box-sizing: border-box;
-			border: #dddddd solid 1px;
+			border-top: #dddddd solid 1px;
 
 			>div {
 				margin-left: 10px;
@@ -853,7 +849,6 @@ export default {
 			display: flex;
 			flex-direction: column;
 			height: 100%;
-			background-color: white !important;
 
 			.send-text-area {
 				box-sizing: border-box;
@@ -863,7 +858,7 @@ export default {
 				resize: none;
 				font-size: 16px;
 				color: black;
-				outline-color: rgba(83, 160, 231, 0.61);
+				outline: none;
 
 				text-align: left;
 				line-height: 30 px;

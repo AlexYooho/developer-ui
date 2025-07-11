@@ -102,7 +102,7 @@ export default {
           this.$wsApi.onMessage((cmd, msgInfo) => {
             if (cmd == this.$enums.CMD_TYPE.FORCE_LOGOUT) { // 强制下线
               this.$wsApi.close(3000);
-              this.$alert("您已在其他地方登陆，将被强制下线", "强制下线通知", {
+              this.$alert("您已在其他客户端登陆，将被强制下线", "强制下线通知", {
                 confirmButtonText: "确定",
                 callback: (action) => {
                   this.showLogin();
@@ -179,7 +179,7 @@ export default {
     handlePrivateMessage(msg) {
       msg.data.self_send = msg.data.sender_info.sender_id == this.$store.state.userStore.userInfo.id;
       let friendId = msg.data.self_send ? msg.data.receiverId : msg.data.sender_info.sender_id;
-      if (msg.data.messageStatus == this.$enums.MESSAGE_STATUS.READED) {
+      if (msg.data.message_status  == this.$enums.MESSAGE_STATUS.READED) {
         if (msg.data.self_send) {
           let chatInfo = {
             type: "PRIVATE",
