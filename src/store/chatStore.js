@@ -80,7 +80,7 @@ export default {
 			// 插入新的数据
 			if (msgInfo.message_content_type == MESSAGE_TYPE.IMAGE) {
 				chat.lastContent = "[图片]";
-			} else if (msgInfo.message_content_type == MESSAGE_TYPE.FILE) {
+			} else if (msgInfo.message_content_type == MESSAGE_TYPE.DOCUMENT) {
 				chat.lastContent = "[文件]";
 			} else if (msgInfo.message_content_type == MESSAGE_TYPE.RED_PACKETS) {
 				chat.lastContent = "[红包]";

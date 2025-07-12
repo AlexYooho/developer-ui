@@ -37,11 +37,10 @@
             <span title="发送失败" v-show="loadFail" @click="handleSendFail" class="send-fail el-icon-warning"></span>
           </div>
           <!-- 文件 -->
-          <div class="chat-msg-file" v-if="msgInfo.message_content_type == $enums.MESSAGE_TYPE.FILE">
+          <div class="chat-msg-file" v-if="msgInfo.message_content_type == $enums.MESSAGE_TYPE.DOCUMENT">
             <div class="chat-file-box" v-loading="loading">
               <div class="chat-file-info">
-                <el-link class="chat-file-name" :underline="true" target="_blank" type="primary" :href="data.url">{{
-                  data.name }}</el-link>
+                <el-link class="chat-file-name" :underline="true" target="_blank" type="primary" :href="data.url">{{ data.name }}</el-link>
                 <div class="chat-file-size">{{ fileSize }}</div>
               </div>
               <div class="chat-file-icon">
@@ -183,7 +182,7 @@ export default {
       return this.msgInfo.loadStatus && this.msgInfo.loadStatus === "fail";
     },
     data() {
-      return JSON.parse(this.msgInfo.messageContent);
+      return JSON.parse(this.msgInfo.message_content);
     },
     fileSize() {
       let size = this.data.size;
@@ -202,7 +201,7 @@ export default {
         name: "删除",
         icon: "el-icon-delete",
       });
-      if (this.msgInfo.selfSend && this.msgInfo.id > 0) {
+      if (this.msgInfo.self_send && this.msgInfo.id > 0) {
         items.push({
           key: "RECALL",
           name: "撤回",

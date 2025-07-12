@@ -25,9 +25,9 @@ const messageApi = {
     },
 
     // 撤回消息
-    recallMessage(chatType, msgId) {
+    recallMessage(chatType) {
         chatType = chatType.toUpperCase() + "_MESSAGE";
-        return http.POST(`/message-module/api/message/${chatType}/recall/${msgId}`);
+        return http.POST(`/message-module/api/message/${chatType}/withdraw`);
     },
 
     // 已读消息

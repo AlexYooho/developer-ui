@@ -371,7 +371,8 @@ export default {
 		},
 		// 撤回消息
 		recallMessage(msgInfo) {
-			this.$api.recallMessage(this.chat.type.toLowerCase(),msgInfo.id).then((res) => {
+			let param = {message_id: msgInfo.id};
+			this.$api.recallMessage(this.chat.type.toLowerCase(),param).then((res) => {
 				this.$message.success("消息已撤回");
 				msgInfo = JSON.parse(JSON.stringify(msgInfo));
 				msgInfo.message_content_type = 0;
@@ -456,7 +457,7 @@ export default {
 			}
 
 			let msgInfo = JSON.parse(JSON.stringify(file.raw.msgInfo));
-			msgInfo.content = JSON.stringify(data);
+			msgInfo.message_content = JSON.stringify(data);
 			this.$api.sendMessage(this.chat.type.toLowerCase(),msgInfo).then((res) => {
 				msgInfo.loadStatus = 'ok';
 				msgInfo.id = res.id;
@@ -481,9 +482,8 @@ export default {
 			let msgInfo = {
 				id: 0,
 				message_content: JSON.stringify(data),
-				message_content_type: this.$enums.MESSAGE_TYPE.IMAGE,
-				message_status: this.$enums.MESSAGE_STATUS_UNSEND,
-
+				message_content_type: this.$enums.MESSAGE_TYPE.DOCUMENT,
+				message_status: this.$enums.MESSAGE_STATUS.UNSEND,
 				self_send: true,
 				send_id: this.mine.id,
 				send_time: new Date().getTime(),
